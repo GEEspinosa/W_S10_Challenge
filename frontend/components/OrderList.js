@@ -3,8 +3,14 @@ import React from 'react'
 import {useGetOrdersQuery} from '../state/OrdersApi'
 
 export default function OrderList() {
-  const { data: orders} = useGetOrdersQuery()
+  const { data: orders, error, isLoading,  } = useGetOrdersQuery();
 
+
+
+ 
+
+
+console.log(orders)
   
   
   
@@ -12,25 +18,21 @@ export default function OrderList() {
   
   //const orders = [{id: 1, customer: 'Cher', size: 'M', toppings: []}]
 
-
   return (
     <div id="orderList">
       <h2>Pizza Orders</h2>
       <ol>
         
-      {
-        
-        
-          orders.map((order, key) => {
-            return (
-              <li key={key}>
-                <div>
-                  {`${order.customer} ordered a size ${order.size} with ${ order.toppings.length ? order.toppings.length : 'no'} ${order.toppings.length > 1 || order.toppings.length === 0 ? 'toppings' : 'topping'}`}
-                </div>
-              </li>
-            )
-          })
-        }
+      {orders?.map((order, key) => {
+          return (
+            <li key={key}>
+              <div>
+                {`${order.customer} ordered a size ${order.size} with ${order.toppings.length ? order.toppings.length : 'no'} ${order.toppings.length > 1 || order.toppings.length === 0 ? 'toppings' : 'topping'}`}
+              </div>
+            </li>
+          )
+        })
+      }
      
 
             
