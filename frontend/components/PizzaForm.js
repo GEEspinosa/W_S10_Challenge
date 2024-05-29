@@ -28,7 +28,7 @@ const reducer = (state, action) => {
 }
 
 export default function PizzaForm() {
-  const [createOrder] = useCreateOrderMutation()
+  const [createOrder, {error: badTimes, isLoading}] = useCreateOrderMutation()
   const [state, dispatch] = useReducer(reducer, initialFormState)
   
   const onChange = evt => {
@@ -49,7 +49,12 @@ export default function PizzaForm() {
   const onNewOrder = evt => {
     evt.preventDefault()
     createOrder(state)
-    resetForm()
+      .unwrap()
+      .then (() => {
+        resetForm()
+      })
+      .catch (err => {console.log(err)})
+   
   }
   
   
@@ -58,8 +63,8 @@ export default function PizzaForm() {
   return (
     <form onSubmit ={onNewOrder} >
       <h2>Pizza Form</h2>
-      {true && <div className='pending'>Order in progress...</div>}
-      {true && <div className='failure'>Order failed: fullName is required</div>}
+      {isLoading && <div className='pending'>Order in progress...</div>}
+      {badTimes && <div className='failure'>Order failed: {badTimes.data.message}</div>}
 
       <div className="input-group">
         <div>
