@@ -7,20 +7,24 @@ const RESET_FORM = 'RESET_FORM'
 const initialFormState = { // suggested
   fullName: '',
   size: '',
-  toppings: []
- 
+  '1': false,
+  '2': false,
+  '3': false,
+  '4': false,
+  '5': false,
 }
 
 const reducer = (state, action) => {
 
   switch (action.type) {
     case CHANGE_INPUT: {
+
       const {name, value} = action.payload
       return { ...state, [name]: value }
     }
 
     case RESET_FORM:
-      return { initialFormState }
+      return { ...initialFormState }
 
     default:
       return state
@@ -33,13 +37,15 @@ export default function PizzaForm() {
   
   const onChange = evt => {
     const {name, value} = evt.target
+
     if (evt.target.type === 'checkbox') {
-      if (evt.target.value === 'on') {
-        state.toppings.push(evt.target.name)
-      }
+      if (evt.target.checked) {
+        state.toppings?.push(evt.target.name)
+      } 
     }
-    dispatch({type: CHANGE_INPUT, payload: {name, value}})
+    dispatch({type: CHANGE_INPUT, payload: {name, value: evt.target.type === 'checkbox' ? evt.target.checked : value}})
   }
+
 
   const resetForm = () => {
     dispatch ({type: RESET_FORM})
@@ -48,7 +54,26 @@ export default function PizzaForm() {
 
   const onNewOrder = evt => {
     evt.preventDefault()
-    createOrder(state)
+
+    const toppings = []
+    const keys = ['1', '2', '3', '4', '5']
+
+    keys.forEach(key => {
+      if (state[key]) {
+        toppings.push(key);
+      }
+    })
+
+    const payload = {
+      fullName: state.fullName,
+      size: state.size,
+      toppings 
+    }
+
+    //console.log(payload)
+
+
+    createOrder(payload)
       .unwrap()
       .then (() => {
         resetForm()
@@ -76,8 +101,7 @@ export default function PizzaForm() {
             placeholder="Type full name"
             type="text"
             onChange = {onChange}
-            value = {state.fullName}
-            
+            value = {state.fullName}  
           />
         </div>
       </div>
@@ -96,19 +120,19 @@ export default function PizzaForm() {
 
       <div className="input-group">
         <label>
-          <input data-testid="checkPepperoni" name="1" type="checkbox" onChange = {onChange} />
+          <input data-testid="checkPepperoni" name="1" type="checkbox" onChange = {onChange} checked = {state[1]}  />
           Pepperoni<br /></label>
         <label>
-          <input data-testid="checkGreenpeppers" name="2" type="checkbox" onChange = {onChange}/>
+          <input data-testid="checkGreenpeppers" name="2" type="checkbox" onChange = {onChange} checked =  {state[2]}/>
           Green Peppers<br /></label>
         <label>
-          <input data-testid="checkPineapple" name="3" type="checkbox" onChange = {onChange}/>
+          <input data-testid="checkPineapple" name="3" type="checkbox" onChange = {onChange} checked =  {state[3]}/>
           Pineapple<br /></label>
         <label>
-          <input data-testid="checkMushrooms" name="4" type="checkbox" onChange = {onChange}/>
+          <input data-testid="checkMushrooms" name="4" type="checkbox" onChange = {onChange} checked =  {state[4]}/>
           Mushrooms<br /></label>
         <label>
-          <input data-testid="checkHam" name="5" type="checkbox" onChange = {onChange} />
+          <input data-testid="checkHam" name="5" type="checkbox" onChange = {onChange} checked =  {state[5]}/>
           Ham<br /></label>
       </div>
       <input data-testid="submit" type="submit" />

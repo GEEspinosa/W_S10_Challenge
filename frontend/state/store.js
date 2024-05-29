@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import pizzaFormSlice from './PizzaFormSlice'
+//import pizzaFormSlice from './PizzaFormSlice'
 import orderListSlice from './OrderListSlice'
 import {ordersApi} from './OrdersApi'
 
@@ -8,9 +8,9 @@ import {ordersApi} from './OrdersApi'
 //   return state
 // }
 
-export const store = configureStore({
+export const resetStore = () => configureStore({
   reducer: {
-    pizzaForm: pizzaFormSlice,
+    //pizzaForm: pizzaFormSlice,
     orderList: orderListSlice,
     [ordersApi.reducerPath]: ordersApi.reducer
     // add your reducer(s) here
@@ -21,5 +21,7 @@ export const store = configureStore({
     ordersApi.middleware
   ),
 })
+
+export const store = resetStore()
 
 

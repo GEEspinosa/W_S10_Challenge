@@ -1,33 +1,41 @@
 import React from 'react'
-//import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import {switchSizeFilter} from '../state/OrderListSlice'
 import {useGetOrdersQuery} from '../state/OrdersApi'
 
 export default function OrderList() {
-  const { data: orders, error, isLoading,  } = useGetOrdersQuery();
+  const { data: orders  } = useGetOrdersQuery();
+  const sizeFilter = useSelector(st => st.orderList.orderFilterSelector)
+  const dispatch = useDispatch()
 
 
 
- 
 
 
-console.log(orders)
+
   
   
-  
-  //const orders = useSelector(st => st.orderList.orders)
-  
-  //const orders = [{id: 1, customer: 'Cher', size: 'M', toppings: []}]
 
   return (
     <div id="orderList">
       <h2>Pizza Orders</h2>
       <ol>
         
-      {orders?.map((order, key) => {
+      {orders?.filter(or => {
+            if (sizeFilter === 'All') {return or}
+            else {return or.size === sizeFilter}
+          }).map((order, key) => {
+          console.log(order.length)
           return (
             <li key={key}>
               <div>
-                {`${order.customer} ordered a size ${order.size} with ${order.toppings.length ? order.toppings.length : 'no'} ${order.toppings.length > 1 || order.toppings.length === 0 ? 'toppings' : 'topping'}`}
+                {`${order?.customer}`}  
+                {' ordered a size '} 
+                {`${order?.size}`}  
+                {' with ' }
+                {`${order?.toppings?.length ? order?.toppings?.length : 'no'}`} 
+                {' topping'} 
+                {`${order?.toppings?.length !== 1 ? 's' : ''}`}
               </div>
             </li>
           )
@@ -47,6 +55,8 @@ console.log(orders)
             return <button
               data-testid={`filterBtn${size}`}
               className={className}
+              onClick = {() => dispatch(switchSizeFilter(size))}
+              value = {size}
               key={size}>{size}</button>
           })
         }
