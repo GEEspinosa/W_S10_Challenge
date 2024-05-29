@@ -51,7 +51,7 @@ export default function OrderList() {
         Filter by size:
         {
           ['All', 'S', 'M', 'L'].map(size => {
-            const className = `button-filter${size === 'All' ? ' active' : ''}`
+            const className = `button-filter${size === sizeFilter ? ' active' : ''}`
             return <button
               data-testid={`filterBtn${size}`}
               className={className}
